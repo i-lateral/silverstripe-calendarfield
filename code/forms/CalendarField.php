@@ -26,7 +26,10 @@ class CalendarField extends FormField
         'allow_past_dates' => false,
         'future_limit' => 10,
         'past_limit' => 0,
-        'days_count' => 3
+        'days_count' => 0,
+        'StartName' => 'CalendarStartDate',
+        'EndName' => 'CalendarEndDate',
+        'useEndField' => true
     ];
 
 	/**
