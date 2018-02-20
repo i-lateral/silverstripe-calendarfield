@@ -15,7 +15,7 @@ class CalendarField extends FormField
 	 *
 	 * @var FieldList
 	 */
-    public $children;
+    protected $children;
     
     protected $product;
 
@@ -27,8 +27,8 @@ class CalendarField extends FormField
         'future_limit' => 10,
         'past_limit' => 0,
         'days_count' => 0,
-        'StartName' => 'CalendarStartDate',
-        'EndName' => 'CalendarEndDate',
+        'StartName' => 'StartDate',
+        'EndName' => 'EndDate',
         'useEndField' => true
     ];
 
@@ -40,16 +40,11 @@ class CalendarField extends FormField
 	 * @param int $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null, $product) {
-        $this->product = $product;
-        
-        $this->children = new FieldList(
-			new HiddenField(
-				"{$name}[_StartDate]"
-			),
-			new HiddenField(
-				"{$name}[_EndDate]"
-			)
-        );
+        if ($product) {
+            $this->product = $product;
+        }
+
+        $this->children = FieldList::create();
         
 		parent::__construct($name, $title, $value);
     }
@@ -61,6 +56,8 @@ class CalendarField extends FormField
 
     public function setOptions(array $options) {
         $this->options = array_merge($this->options, $options);
+
+        return $this;
     }
 
     public function getProduct()
@@ -70,6 +67,9 @@ class CalendarField extends FormField
 
     public function setProduct($product) {
         $this->product = $product;
+
+        return $this;
+
     }
 
     public function getMonth() {
@@ -87,6 +87,21 @@ class CalendarField extends FormField
         }
         return date('Y');
     }
+
+    public function setChildren(FieldList $fields) 
+    {
+        $this->children = $fields;
+
+        return $this;
+    }
+
+	/**
+	 * Returns the children of this field for use in templating.
+	 * @return FieldList
+	 */
+	public function getChildren() {
+		return $this->children;
+	}
 
     /* draws a calendar */
     function calendar() {
@@ -184,6 +199,18 @@ class CalendarField extends FormField
             ]));
         }
 
+        $this->children->add(
+            HiddenField::create(
+                $this->getName().'_'.$this->options['StartName']
+            )->setAttribute('data-calendar','StartDate')
+        );
+
+        $this->children->add(
+            HiddenField::create(
+                $this->getName().'_'.$this->options['EndName']
+            )->setAttribute('data-calendar','EndDate')
+        );
+
         $this->extend('updateCalendar',$days);
 
         return $this->renderWith(
@@ -194,9 +221,7 @@ class CalendarField extends FormField
                 'NextLink' => $next,
                 'MonthField' => $month,
                 'YearField' => $year,
-                'Days' => $days,
-                'StartField' => $this->getStartField(),
-                'EndField' => $this->getEndField()
+                'Days' => $days
             ]
         );
     }

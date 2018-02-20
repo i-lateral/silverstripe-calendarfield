@@ -4,8 +4,8 @@ jQuery.noConflict();
     function calendarAjax($url = null) 
     {
         $table = $('#Form_Form_Calendar');
-        $start_field = $('#CalendarStart input');
-        $end_field = $('#CalendarEnd input');
+        $start_field = $('input[data-calendar=StartDate]');
+        $end_field = $('input[data-calendar=EndDate]');
         $start_date = $start_field.val();
         $end_date = $end_field.val();
         $link = $table.attr('data-url');
@@ -19,8 +19,8 @@ jQuery.noConflict();
         $table.append('<div class="preloader-holder"><div class="preloader"><span class="preloader-icon">&#10227;</span></div></div>');
         $.get($url,function($data) {
             $table.replaceWith($data);
-            $start_field = $('#CalendarStart input');
-            $end_field = $('#CalendarEnd input');
+            $start_field = $('input[data-calendar=StartDate]');
+            $end_field = $('input[data-calendar=EndDate]');
             $start_field.val($start_date);
             $end_field.val($end_date);
             if ($start_field.val() && $end_field.val()) {
@@ -113,8 +113,9 @@ jQuery.noConflict();
         $(document).on('click','#Form_Form_Calendar .available',function() {
             $table = $('#Form_Form_Calendar');
             $days = $table.attr('data-days');
-            $start_field = $('#CalendarStart input');
-            $end_field = $('#CalendarEnd input');
+            $start_field = $('input[data-calendar=StartDate]');
+            $end_field = $('input[data-calendar=EndDate]');
+            console.log($start_field);
             if ($start_field.length > 0 && $days > 0 && $end_field.length > 0) {
                 $start_field.val($(this).attr('data-date'));
                 $next_date = new Date($(this).attr('data-date'));

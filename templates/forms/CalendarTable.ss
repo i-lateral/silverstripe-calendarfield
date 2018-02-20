@@ -1,7 +1,7 @@
-<% require css(commerce-simplebookings/css/calendar.css) %>
+<% require css(calendar-field/css/calendar.css) %>
 
 <% require javascript(framework/thirdparty/jquery/jquery.js) %>
-<% require javascript(commerce-simplebookings/js/calendar.js) %>
+<% require javascript(calendar-field/js/calendar.js) %>
 <div $AttributesHTML>
     <table cellspacing="0" cellpadding="0" class="calendar table">
         <tr>
@@ -51,10 +51,7 @@
         </div>
     </div>
 
-    <div id="CalendarStart">
-        $StartField
-    </div>
-    <div id="CalendarEnd">
-        $EndField
-    </div>
+    <% loop $Children %>
+        $FieldHolder
+    <% end_loop %>
 </div>    
