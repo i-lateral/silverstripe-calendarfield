@@ -17,8 +17,6 @@ class CalendarField extends FormField
 	 */
     protected $children;
     
-    protected $product;
-
     protected $options = [
         'day_format' => 'D',
         'month_format' => 'M',
@@ -41,11 +39,7 @@ class CalendarField extends FormField
 	 * @param string $title The field label.
 	 * @param int $value The value of the field.
 	 */
-	public function __construct($name, $title = null, $value = null, $product) {
-        if ($product) {
-            $this->product = $product;
-        }
-
+	public function __construct($name, $title = null, $value = null) {
         $this->children = FieldList::create();
         
 		parent::__construct($name, $title, $value);
@@ -60,19 +54,6 @@ class CalendarField extends FormField
         $this->options = array_merge($this->options, $options);
 
         return $this;
-    }
-
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    public function setProduct($product) 
-    {
-        $this->product = $product;
-
-        return $this;
-
     }
 
     public function getDisabledDates() 
@@ -131,19 +112,10 @@ class CalendarField extends FormField
 	 */
 	public function getChildren() {
 		return $this->children;
-	}
-
-    /* draws a calendar */
-    function calendar() {
-        $today = new Date();
-        $today->setValue(date("Y-m-d H:i:s"));
-        
-        $month = $this->getMonth();
-        $year = $this->getYear();
-
-        /* draw table */
-        $calendar = ArrayList::create();
-
+    }
+    
+    public function getCalendarDays($month,$year)
+    {
         /* days in month */
         $days = ArrayList::create();
 
@@ -202,30 +174,21 @@ class CalendarField extends FormField
                 $days->push($day);
             }
         }
-        
-        
-        $product = $this->getProduct();
-        
-        if ($product) {
-            foreach ($days as $day) {
-                $spaces = $product->AvailablePlaces - $product->getBookedPlaces($day->Date->format("Y-m-d 00:00:00"), $day->Date->format("Y-m-d 23:59:59"));
-                if (
-                    ($spaces > 0 && $day->Date->format("Y-m-d H:i:s") > $today->format("Y-m-d H:i:s")) 
-                    && !in_array($day->Date->format("Y-m-d"),$this->disabled_dates)
-                ) {
-                    $day->Availability = 'available';
-                    $day->Spaces = $spaces;
-                } else {
-                    $day->Availability = 'not-available'; 
-                    $day->Spaces = 0;                   
-                }
+
+        foreach ($days as $day) {
+            if (!in_array($day->Date->format("Y-m-d"),$this->disabled_dates)
+            ) {
+                $day->Availability = 'available';
+            } else {
+                $day->Availability = 'not-available'; 
             }
         }
 
-        $back = $this->getBackLink();
-        $next = $this->getNextLink();
-        $month = $this->getMonthField();
-        $year = $this->getYearField();
+        return $days;
+    }
+
+    public function getCalendarHeadings()
+    {
         $headings = ArrayList::create();
         
         foreach ($this->getDaysOfWeek() as $heading) {
@@ -233,6 +196,29 @@ class CalendarField extends FormField
                 'Day' => $heading
             ]));
         }
+
+        return $headings;
+    }
+
+    /* draws a calendar */
+    function calendar() {
+        $today = new Date();
+        $today->setValue(date("Y-m-d H:i:s"));
+        
+        $month = $this->getMonth();
+        $year = $this->getYear();
+
+        /* draw table */
+        $calendar = ArrayList::create();
+
+        $days = $this->getCalendarDays($month,$year);
+
+        $back = $this->getBackLink();
+        $next = $this->getNextLink();
+        $month = $this->getMonthField();
+        $year = $this->getYearField();
+
+        $headings = $this->getCalendarHeadings();
 
         $this->children->add(
             HiddenField::create(
