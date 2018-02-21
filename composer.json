@@ -22,7 +22,7 @@
           "i-lateral/silverstripe-siteconfig": "Add site settings support"
       },
       "extra": {
-          "installer-name": "calendar-field"
+          "installer-name": "calendarfield"
       }
   }
   

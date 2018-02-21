@@ -1,7 +1,7 @@
-<% require css(calendar-field/css/calendar.css) %>
+<% require css(calendarfield/css/calendar.css) %>
 
 <% require javascript(framework/thirdparty/jquery/jquery.js) %>
-<% require javascript(calendar-field/js/calendar.js) %>
+<% require javascript(calendarfield/js/calendar.js) %>
 <div $AttributesHTML>
     <table cellspacing="0" cellpadding="0" class="calendar table">
         <tr>

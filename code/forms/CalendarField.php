@@ -21,13 +21,13 @@ class CalendarField extends FormField
         'day_format' => 'D',
         'month_format' => 'M',
         'year_format' => 'Y',
-        'allow_past_dates' => false,
-        'future_limit' => 10,
-        'past_limit' => 0,
+        'allow_past_dates' => true,
+        'future_limit' => 100,
+        'past_limit' => 100,
         'days_count' => 0,
         'StartName' => 'StartDate',
         'EndName' => 'EndDate',
-        'useEndField' => true
+        'useEndField' => false
     ];
 
     protected $disabled_dates = [];
