@@ -81,7 +81,7 @@ class CalendarField extends FormField
         return $this;
     }
 
-    public function getMonth() #
+    public function getMonth()
     {
         $month = $this->getRequest()->param('Month');
         if ($month) {
@@ -179,8 +179,10 @@ class CalendarField extends FormField
             if (!in_array($day->Date->format("Y-m-d"),$this->disabled_dates)
             ) {
                 $day->Availability = 'available';
+                $day->Lock = false; 
             } else {
-                $day->Availability = 'not-available'; 
+                $day->Availability = 'not-available';
+                $day->Lock = true; 
             }
         }
 
@@ -235,7 +237,7 @@ class CalendarField extends FormField
         $this->extend('updateCalendar',$days);
 
         return $this->renderWith(
-            'CalendarTable',
+            self::class,
             [
                 'DayHeadings' => $headings,
                 'BackLink' => $back,
