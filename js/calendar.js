@@ -9,8 +9,8 @@ jQuery.noConflict();
         $start_date = $start_field.val();
         $end_date = $end_field.val();
         $link = $table.attr('data-url');
-        $month_field = $table.find('#CalendarMonth');
-        $year_field = $table.find('#CalendarYear');
+        $month_field = $table.find('#Calendar_Month');
+        $year_field = $table.find('#Calendar_Year');
         $month = $month_field.val();
         $year = $year_field.val();
         if ($url == null) {
