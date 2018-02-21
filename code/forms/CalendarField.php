@@ -32,6 +32,8 @@ class CalendarField extends FormField
         'useEndField' => true
     ];
 
+    protected $disabled_dates = [];
+
 	/**
 	 * Create a new file field.
 	 *
@@ -65,14 +67,41 @@ class CalendarField extends FormField
         return $this->product;
     }
 
-    public function setProduct($product) {
+    public function setProduct($product) 
+    {
         $this->product = $product;
 
         return $this;
 
     }
 
-    public function getMonth() {
+    public function getDisabledDates() 
+    {
+        return $this->disabled_dates;
+    }
+
+    public function setDisabledDates(array $dates)
+    {
+        $disabled = [];
+
+        foreach ($dates as $date) {
+            if ($date instanceof Date) {
+                $disabled[] = $date->format("Y-m-d");
+            } else if ($date instanceof DateTime) {
+                $disabled[] = $date->format('Y-m-d');
+            } else {
+                $new_date = new DateTime($date);
+                $disabled[] = $new_date->format("Y-m-d");
+            }
+        }
+
+        $this->disabled_dates = $disabled;
+
+        return $this;
+    }
+
+    public function getMonth() #
+    {
         $month = $this->getRequest()->param('Month');
         if ($month) {
             return $month;
@@ -80,7 +109,8 @@ class CalendarField extends FormField
         return date('n');
     }
 
-    public function getYear() {
+    public function getYear() 
+    {
         $year = $this->getRequest()->param('Year');
         if ($year) {
             return $year;
@@ -127,10 +157,10 @@ class CalendarField extends FormField
 
         /* print "blank" days until the first of the current week */
         for($x = 0; $x < $running_day; $x++) {
-            $datetime = new DateTime(date('d/m/Y',mktime(0,0,0,1,$month,$year)));
-            $datetime->sub(date_interval_create_from_date_string(($running_day - $x).' days'));
+            $datetime = new DateTime($year . '-' . $month . '-01');
+            $datetime->modify('- ' . ($running_day - $x) . ' days');
             $date = new Date();
-            $date->setValue(date('d/m/Y',mktime(0,0,0,($month-1),($days_last_month - ($running_day-$x) + 1),$year)));
+            $date->setValue($datetime->format('Y-m-d'));
             $day = ArrayData::create([
                 'InMonth' => false,
                 'Number' => $datetime->format('d'),
@@ -143,7 +173,7 @@ class CalendarField extends FormField
         /* keep going with days.... */
         for($list_day = 1; $list_day <= $days_in_month; $list_day++) {
             $date = new Date();
-            $date->setValue(date('d/m/Y',mktime(0,0,0,$month,$list_day,$year)));
+            $date->setValue($year . '-' . $month . '-' . $list_day);
             $day = ArrayData::create([
                 'InMonth' => true,
                 'Number' => $list_day,
@@ -163,7 +193,7 @@ class CalendarField extends FormField
         if($days_in_this_week < 8) {
             for($x = 1; $x <= (8 - $days_in_this_week); $x++) {
                 $date = new Date();
-                $date->setValue(date('d/m/Y',mktime(0,0,0,($month + 1),$x,$year)));
+                $date->setValue(date('Y-m-d',mktime(0,0,0,($month + 1),$x,$year)));
                 $day = ArrayData::create([
                     'InMonth' => false,
                     'Number' => $x,
@@ -175,14 +205,19 @@ class CalendarField extends FormField
         
         
         $product = $this->getProduct();
-
+        
         if ($product) {
             foreach ($days as $day) {
-                $day->Spaces = $product->AvailablePlaces - $product->getBookedPlaces($day->Date->format("Y-m-d 00:00:00"), $day->Date->format("Y-m-d 23:59:59"));
-                if ($day->Spaces > 0 && $day->Date->format("Y-m-d H:i:s") > $today->format("Y-m-d H:i:s")) {
+                $spaces = $product->AvailablePlaces - $product->getBookedPlaces($day->Date->format("Y-m-d 00:00:00"), $day->Date->format("Y-m-d 23:59:59"));
+                if (
+                    ($spaces > 0 && $day->Date->format("Y-m-d H:i:s") > $today->format("Y-m-d H:i:s")) 
+                    && !in_array($day->Date->format("Y-m-d"),$this->disabled_dates)
+                ) {
                     $day->Availability = 'available';
+                    $day->Spaces = $spaces;
                 } else {
-                    $day->Availability = 'not-available';                    
+                    $day->Availability = 'not-available'; 
+                    $day->Spaces = 0;                   
                 }
             }
         }
@@ -201,13 +236,13 @@ class CalendarField extends FormField
 
         $this->children->add(
             HiddenField::create(
-                $this->getName().'_'.$this->options['StartName']
+                $this->getName().'['.$this->options['StartName'].']'
             )->setAttribute('data-calendar','StartDate')
         );
 
         $this->children->add(
             HiddenField::create(
-                $this->getName().'_'.$this->options['EndName']
+                $this->getName().'['.$this->options['EndName'].']'
             )->setAttribute('data-calendar','EndDate')
         );
 
@@ -247,8 +282,8 @@ class CalendarField extends FormField
         $month = $this->getMonth();
         $year = $this->getYear();
 
-        $date = new DateTime(date('d/m/Y',mktime(0,0,0,1,$month,$year)));
-        $date->sub(date_interval_create_from_date_string('1 month'));
+        $date = new DateTime($year . '-' . $month . '-01');
+        $date->modify('-1 month');
 
         return Controller::join_links(
             $this->Link('calendar'),
@@ -262,8 +297,8 @@ class CalendarField extends FormField
         $month = $this->getMonth();
         $year = $this->getYear();
 
-        $date = new DateTime(date('d/m/Y',mktime(0,0,0,1,$month,$year)));
-        $date->add(date_interval_create_from_date_string('1 month'));
+        $date = new DateTime($year . '-' . $month . '-01');
+        $date->modify('+1 month');
 
         return Controller::join_links(
             $this->Link('calendar'),
@@ -283,7 +318,7 @@ class CalendarField extends FormField
         }
 
         return DropdownField::create(
-            'CalendarMonth',
+            'Calendar[Month]',
             'Month',
             $months
         )->setValue($current_month);
@@ -308,7 +343,7 @@ class CalendarField extends FormField
         }
 
         return DropdownField::create(
-            'CalendarYear',
+            'Calendar[Year]',
             'Year',
             $years
         )->setValue($current_year);
@@ -344,4 +379,23 @@ class CalendarField extends FormField
 
 		return $attributes;
     }
+
+	public function saveInto(DataObjectInterface $record) {
+		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
+		$start_name = $this->options['StartName'];
+		$end_name = $this->options['EndName'];
+
+		if( $countryCode )
+			$completeNumber .= '+' . $countryCode;
+
+		if( $areaCode )
+			$completeNumber .= '(' . $areaCode . ')';
+
+		$completeNumber .= $phoneNumber;
+
+		if( $extension )
+			$completeNumber .= '#' . $extension;
+
+		$record->$fieldName = $completeNumber;
+	}
 }

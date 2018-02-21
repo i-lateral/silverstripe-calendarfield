@@ -8,19 +8,6 @@
             opacity: 0.5;
         }
         text-align: center;
-        .not-available {
-            background: fadeout(slategrey,75%);
-        }
-        .available {
-            &:hover,
-            &.hover { 
-                cursor: pointer;
-                background: fadeout(green,50%);
-            }
-        }
-        .selected {
-            background: fadeout(blue,75%);
-        }
     }
 
     .calendar-key {
@@ -35,15 +22,25 @@
             width: 1em;
             height: 1em;
             border: 1px solid black;
-            &.not-available {
-                background: fadeout(slategrey,75%);
-            }
-            &.available {
-                background: white;
-            }
-            &.selected {
-                background: fadeout(blue,75%);
-            }
+        }
+    }
+    .not-available {
+        background: fadeout(slategrey,75%);
+        &.hover {
+            background: fadeout(orange,50%);
+        }
+    }
+    .available {
+        &:hover,
+        &.hover { 
+            cursor: pointer;
+            background: fadeout(green,50%);
+        }
+    }
+    .selected {
+        background: fadeout(blue,75%);
+        &.hover {
+            background: fadeout(red,50%);
         }
     }
 
