@@ -8,6 +8,22 @@
             opacity: 0.5;
         }
         text-align: center;
+<<<<<<< HEAD
+=======
+        .not-available {
+            background: fadeout(slategrey,75%);
+        }
+        .available {
+            &:hover,
+            &.hover { 
+                cursor: pointer;
+                background: fadeout(green,50%);
+            }
+        }
+        .selected {
+            background: fadeout(blue,75%);
+        }
+>>>>>>> a1b2724af54633bb8fa3664b386a47f3588f68cd
     }
 
     .calendar-key {
@@ -22,6 +38,7 @@
             width: 1em;
             height: 1em;
             border: 1px solid black;
+<<<<<<< HEAD
         }
     }
     .not-available {
@@ -41,6 +58,17 @@
         background: fadeout(blue,75%);
         &.hover {
             background: fadeout(red,50%);
+=======
+            &.not-available {
+                background: fadeout(slategrey,75%);
+            }
+            &.available {
+                background: white;
+            }
+            &.selected {
+                background: fadeout(blue,75%);
+            }
+>>>>>>> a1b2724af54633bb8fa3664b386a47f3588f68cd
         }
     }
 
