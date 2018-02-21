@@ -9,23 +9,6 @@
 #Form_Form_Calendar table .calendar-day-np {
   opacity: 0.5;
 }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-#Form_Form_Calendar table .not-available {
-  background: rgba(112, 128, 144, 0.25);
-}
-#Form_Form_Calendar table .available:hover,
-#Form_Form_Calendar table .available.hover {
-  cursor: pointer;
-  background: rgba(0, 128, 0, 0.5);
-}
-#Form_Form_Calendar table .selected {
-  background: rgba(0, 0, 255, 0.25);
-}
->>>>>>> a1b2724af54633bb8fa3664b386a47f3588f68cd
->>>>>>> master
 #Form_Form_Calendar .calendar-key p {
   margin-bottom: 0.25em;
 }
@@ -38,10 +21,6 @@
   height: 1em;
   border: 1px solid black;
 }
-<<<<<<< HEAD
-#Form_Form_Calendar .not-available {
-=======
-<<<<<<< HEAD
 #Form_Form_Calendar .not-available {
   background: rgba(112, 128, 144, 0.25);
 }
@@ -59,29 +38,6 @@
 #Form_Form_Calendar .selected.hover {
   background: rgba(255, 0, 0, 0.5);
 }
-=======
-#Form_Form_Calendar .calendar-key .color-swatch.not-available {
->>>>>>> master
-  background: rgba(112, 128, 144, 0.25);
-}
-#Form_Form_Calendar .not-available.hover {
-  background: rgba(255, 165, 0, 0.5);
-}
-#Form_Form_Calendar .available:hover,
-#Form_Form_Calendar .available.hover {
-  cursor: pointer;
-  background: rgba(0, 128, 0, 0.5);
-}
-#Form_Form_Calendar .selected {
-  background: rgba(0, 0, 255, 0.25);
-}
-<<<<<<< HEAD
-#Form_Form_Calendar .selected.hover {
-  background: rgba(255, 0, 0, 0.5);
-}
-=======
->>>>>>> a1b2724af54633bb8fa3664b386a47f3588f68cd
->>>>>>> master
 #Form_Form_Calendar .preloader-holder {
   position: absolute;
   top: 0;
