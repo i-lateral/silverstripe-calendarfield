@@ -3,7 +3,7 @@ jQuery.noConflict();
 (function($) {
     function calendarAjax($url = null) 
     {
-        $table = $('#Form_Form_Calendar');
+        $table = $('.calendarfield');
         $start_field = $('input[data-calendar=StartDate]');
         $end_field = $('input[data-calendar=EndDate]');
         $start_date = $start_field.val();
@@ -36,7 +36,7 @@ jQuery.noConflict();
         $start_date = new Date($start);
         $end_date = new Date($end);
         $end_date.setDate($end_date.getDate()+1);
-        $table = $('#Form_Form_Calendar');
+        $table = $('.calendarfield');
         $dates = $table.find('td');
 
         if (!$valid) {
@@ -58,7 +58,7 @@ jQuery.noConflict();
         $start_date = new Date($start);
         $end_date = new Date($end);
         $end_date.setDate($end_date.getDate()+1);
-        $table = $('#Form_Form_Calendar');
+        $table = $('.calendarfield');
         $dates = $table.find('td');
         $valid = true;
         $dates.each(function() {
@@ -76,7 +76,7 @@ jQuery.noConflict();
         $start_date = new Date($start);
         $end_date = new Date($end);
         $end_date.setDate($end_date.getDate()+1)
-        $table = $('#Form_Form_Calendar');
+        $table = $('.calendarfield');
         $dates = $table.find('td');
         $dates.each(function() {
             $curr_time = new Date($(this).attr('data-date')).getTime();
@@ -89,7 +89,7 @@ jQuery.noConflict();
     }
 
     function deselectAllDates($start = true) {
-        $table = $('#Form_Form_Calendar');
+        $table = $('.calendarfield');
         $start_field = $('input[data-calendar=StartDate]');
         $end_field = $('input[data-calendar=EndDate]');
         if ($start) {
@@ -107,7 +107,7 @@ jQuery.noConflict();
     }
 
     function removeHover() {
-        $table = $('#Form_Form_Calendar');
+        $table = $('.calendarfield');
         $dates = $table.find('td');
         $dates.each(function() {
             $(this).removeClass('hover');
@@ -115,17 +115,17 @@ jQuery.noConflict();
     }
 
 	$(document).ready(function() {
-        $(document).on('change','#Form_Form_Calendar select',function() {
+        $(document).on('change','.calendarfield select',function() {
             calendarAjax();
         });
 
-        $(document).on('click','#Form_Form_Calendar .direction-link',function(e) {
+        $(document).on('click','.calendarfield .direction-link',function(e) {
             e.preventDefault();
             calendarAjax($(this).attr('href'));
         });
 
-        $(document).on('mouseenter','#Form_Form_Calendar .available',function() {
-            $table = $('#Form_Form_Calendar');
+        $(document).on('mouseenter','.calendarfield .available',function() {
+            $table = $('.calendarfield');
             $days = $table.attr('data-days');
             if ($days > 0) {
                 removeHover();
@@ -137,8 +137,8 @@ jQuery.noConflict();
             }
         });
 
-        $(document).on('mouseleave','#Form_Form_Calendar .calendar-row',function() {
-            $table = $('#Form_Form_Calendar');
+        $(document).on('mouseleave','.calendarfield .calendar-row',function() {
+            $table = $('.calendarfield');
             $days = $table.attr('data-days');
             if ($days > 0) {
                 removeHover();
@@ -146,29 +146,41 @@ jQuery.noConflict();
 
         });
 
-        $(document).on('mouseenter','#Form_Form_Calendar .selected',function() {
-            $table = $('#Form_Form_Calendar');
+        $(document).on('mouseenter','.calendarfield .selected',function() {
+            $table = $('.calendarfield');
             $dates = $table.find('td.selected');
             $dates.each(function() {
                 $(this).addClass('hover');
             });
         });
 
-        $(document).on('click','#Form_Form_Calendar .available, #Form_Form_Calendar .selected',function() {
-            $table = $('#Form_Form_Calendar');
+        $(document).on('mouseleave','.calendarfield .selected',function() {
+            $table = $('.calendarfield');
+            $dates = $table.find('td.selected');
+            $dates.each(function() {
+                $(this).removeClass('hover');
+            });
+        });
+
+        $(document).on('click','.calendarfield .available, .calendarfield .selected',function() {
+            $table = $('.calendarfield');
             $days = $table.attr('data-days');
             $start_field = $('input[data-calendar=StartDate]');
             $end_field = $('input[data-calendar=EndDate]');
             if ($(this).hasClass('selected')) {
                 deselectAllDates();
             } else {
-                if ($start_field.length > 0 && $days > 0 && $end_field.length > 0) {
+                if ($start_field.length > 0 && $days > 0 ) {
                     $start_field.val($(this).attr('data-date'));
-                    $next_date = new Date($(this).attr('data-date'));
-                    $next_date.setDate($next_date.getDate()+(parseInt($days)-1));
-                    $date_string = $next_date.getFullYear()+'-'+($next_date.getMonth()+1)+'-'+$next_date.getDate();
-                    $end_field.val($date_string);
-                    selectDates($start_field.val(),$end_field.val()); 
+                    if ($end_field.length > 0) {
+                        $next_date = new Date($(this).attr('data-date'));
+                        $next_date.setDate($next_date.getDate()+(parseInt($days)-1));
+                        $date_string = $next_date.getFullYear()+'-'+($next_date.getMonth()+1)+'-'+$next_date.getDate();
+                        $end_field.val($date_string);
+                        selectDates($start_field.val(),$end_field.val()); 
+                    } else {
+                        selectDates($start_field.val(),$start_field.val()); 
+                    }
                 } else if ($start_field.length > 0 && !$start_field.val()) {
                     $start_field.val($(this).attr('data-date'));
                     $(this).addClass('selected');

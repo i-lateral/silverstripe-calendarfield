@@ -2,7 +2,7 @@
 
 <% require javascript(framework/thirdparty/jquery/jquery.js) %>
 <% require javascript(calendarfield/js/calendar.js) %>
-<div $AttributesHTML>
+<div $addExtraClass('calendarfield').AttributesHTML>
     <table cellspacing="0" cellpadding="0" class="calendar table">
         <tr>
             <th><a class="direction-link" href="$BackLink">&lt;&lt;</a></td>

@@ -1,5 +1,5 @@
 // out: ../css/calendar.css
-#Form_Form_Calendar {
+.calendarfield {
     position: relative;
     width: 100%;
     table {
@@ -9,8 +9,7 @@
         }
         text-align: center;
     }
-
-    .calendar-key {
+    .calendar-key { 
         p {
             margin-bottom: 0.25em;
         }
@@ -25,32 +24,31 @@
         }
     }
     .not-available {
-        background: fadeout(slategrey,75%);
+        background: fadeout(slategrey, 75%);
         &.hover {
-            background: fadeout(orange,50%);
+            background: fadeout(orange, 50%);
         }
     }
     .available {
         &:hover,
-        &.hover { 
+        &.hover {
             cursor: pointer;
-            background: fadeout(green,50%);
+            background: fadeout(green, 50%);
         }
     }
     .selected {
-        background: fadeout(blue,75%);
+        background: fadeout(blue, 75%);
         &.hover {
-            background: fadeout(red,50%);
+            background: fadeout(red, 50%);
         }
     }
-
     .preloader-holder {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: fadeout(black,90%);
+        background: fadeout(black, 90%);
         .preloader {
             position: absolute;
             top: 50%;
@@ -58,39 +56,41 @@
             font-size: 3rem;
             -webkit-transform: translate(-50%);
             -ms-transform: translate(-50%);
-                transform: translate(-50%);
+            transform: translate(-50%);
             span {
                 display: block;
                 -webkit-transform-origin: center center;
-                    -ms-transform-origin: center center;
-                        transform-origin: center center;
+                -ms-transform-origin: center center;
+                transform-origin: center center;
                 -webkit-animation-name: spin;
-                        animation-name: spin;
+                animation-name: spin;
                 -webkit-animation-duration: 1000ms;
-                        animation-duration: 1000ms;
+                animation-duration: 1000ms;
                 -webkit-animation-iteration-count: infinite;
-                        animation-iteration-count: infinite;
+                animation-iteration-count: infinite;
                 -webkit-animation-timing-function: linear;
-                        animation-timing-function: linear; 
-                @-webkit-keyframes spin { 
-                    from { 
-                        -webkit-transform: rotate(0deg); 
-                                transform: rotate(0deg); 
-                    } to { 
-                        -webkit-transform: rotate(360deg); 
-                                transform: rotate(360deg); 
+                animation-timing-function: linear;
+                @-webkit-keyframes spin {
+                    from {
+                        -webkit-transform: rotate(0deg);
+                        transform: rotate(0deg);
                     }
-                } 
-                @keyframes spin { 
-                    from { 
-                        -webkit-transform: rotate(0deg); 
-                                transform: rotate(0deg); 
-                    } to { 
-                        -webkit-transform: rotate(360deg); 
-                                transform: rotate(360deg); 
+                    to {
+                        -webkit-transform: rotate(360deg);
+                        transform: rotate(360deg);
                     }
-                }  
-            }     
+                }
+                @keyframes spin {
+                    from {
+                        -webkit-transform: rotate(0deg);
+                        transform: rotate(0deg);
+                    }
+                    to {
+                        -webkit-transform: rotate(360deg);
+                        transform: rotate(360deg);
+                    }
+                }
+            }
         }
     }
-} 
+}

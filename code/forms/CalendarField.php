@@ -228,11 +228,13 @@ class CalendarField extends FormField
             )->setAttribute('data-calendar','StartDate')
         );
 
-        $this->children->add(
-            HiddenField::create(
-                $this->getName().'['.$this->options['EndName'].']'
-            )->setAttribute('data-calendar','EndDate')
-        );
+        if ($this->options['useEndField']) {
+            $this->children->add(
+                HiddenField::create(
+                    $this->getName().'['.$this->options['EndName'].']'
+                )->setAttribute('data-calendar','EndDate')
+            );
+        }
 
         $this->extend('updateCalendar',$days);
 
@@ -347,7 +349,6 @@ class CalendarField extends FormField
 	public function getAttributes() {
 		$attributes = array(
 			'name' => $this->getName(),
-			'value' => $this->Value(),
 			'class' => $this->extraClass(),
 			'id' => $this->ID(),
 			'disabled' => $this->isDisabled(),
@@ -367,23 +368,4 @@ class CalendarField extends FormField
 
 		return $attributes;
     }
-
-	public function saveInto(DataObjectInterface $record) {
-		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
-		$start_name = $this->options['StartName'];
-		$end_name = $this->options['EndName'];
-
-		if( $countryCode )
-			$completeNumber .= '+' . $countryCode;
-
-		if( $areaCode )
-			$completeNumber .= '(' . $areaCode . ')';
-
-		$completeNumber .= $phoneNumber;
-
-		if( $extension )
-			$completeNumber .= '#' . $extension;
-
-		$record->$fieldName = $completeNumber;
-	}
 }
