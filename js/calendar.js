@@ -180,7 +180,7 @@ jQuery.noConflict();
                     if ($end_field.length > 0) {
                         $next_date = new Date($(this).attr('data-date'));
                         $next_date.setDate($next_date.getDate()+(parseInt($days)-1));
-                        $date_string = $next_date.getFullYear()+'-'+($next_date.getMonth()+1)+'-'+$next_date.getDate();
+                        $date_string = $next_date.getFullYear()+'-'+("0" + ($next_date.getMonth() + 1)).slice(-2)+'-'+$next_date.getDate();
                         $end_field.val($date_string);
                         selectDates($start_field.val(),$end_field.val()); 
                     } else {
