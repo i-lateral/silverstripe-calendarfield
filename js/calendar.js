@@ -38,9 +38,14 @@ jQuery.noConflict();
         $end_date.setDate($end_date.getDate()+1);
         $table = $('.calendarfield');
         $dates = $table.find('td');
+        $days = $table.attr('data-days');
 
         if (!$valid) {
-            deselectAllDates(false);
+            if ($days == 0) {
+                deselectAllDates(false);
+            } else {
+                deselectAllDates();
+            }
         } else {
             $dates.each(function() {
                 $curr_time = new Date($(this).attr('data-date')).getTime();
