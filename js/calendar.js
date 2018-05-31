@@ -3,7 +3,7 @@ jQuery.noConflict();
 (function($) {
     function calendarAjax($url = null) 
     {
-        $table = $('.calendarfield');
+        $table = $('.calendarfield table');
         $start_field = $('input[data-calendar=StartDate]');
         $end_field = $('input[data-calendar=EndDate]');
         $start_date = $start_field.val();
@@ -18,7 +18,7 @@ jQuery.noConflict();
         }
         $table.append('<div class="preloader-holder"><div class="preloader"><span class="preloader-icon">&#10227;</span></div></div>');
         $.get($url,function($data) {
-            $table.replaceWith($data);
+            $table.replaceWith($($data).find('table'));
             $start_field = $('input[data-calendar=StartDate]');
             $end_field = $('input[data-calendar=EndDate]');
             $start_field.val($start_date);
