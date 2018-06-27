@@ -3,12 +3,13 @@ jQuery.noConflict();
 (function($) {
     function calendarAjax($url = null) 
     {
+        $field = $('.calendarfield');
         $table = $('.calendarfield table');
         $start_field = $('input[data-calendar=StartDate]');
         $end_field = $('input[data-calendar=EndDate]');
         $start_date = $start_field.val();
         $end_date = $end_field.val();
-        $link = $table.attr('data-url');
+        $link = $field.attr('data-url');
         $month_field = $table.find('#Calendar_Month');
         $year_field = $table.find('#Calendar_Year');
         $month = $month_field.val();
