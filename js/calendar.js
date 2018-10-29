@@ -171,7 +171,8 @@ jQuery.noConflict();
             });
         });
 
-        $(document).on('click','.calendarfield .available, .calendarfield .selected',function() {
+        $(document).on('touchstart click','.calendarfield .available, .calendarfield .selected',function() {
+            console.log('clicky');
             $table = $('.calendarfield');
             $days = $table.attr('data-days');
             $start_field = $('input[data-calendar=StartDate]');
