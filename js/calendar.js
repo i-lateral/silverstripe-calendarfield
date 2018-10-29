@@ -1,7 +1,7 @@
 jQuery.noConflict();
 
 (function($) {
-    function calendarAjax($url = null) 
+    function calendarAjax($url) 
     {
         $field = $('.calendarfield');
         $table = $('.calendarfield table');
