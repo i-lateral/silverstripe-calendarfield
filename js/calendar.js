@@ -94,7 +94,10 @@ jQuery.noConflict();
         });
     }
 
-    function deselectAllDates($start = true) {
+    function deselectAllDates($start) {
+        if ($start === undefinmed) {
+            $start = true;
+        }
         $table = $('.calendarfield');
         $start_field = $('input[data-calendar=StartDate]');
         $end_field = $('input[data-calendar=EndDate]');
