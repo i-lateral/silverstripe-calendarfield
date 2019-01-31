@@ -156,7 +156,7 @@ class CalendarField extends FormField
         $dates_array = array();
 
         /* print "blank" days until the first of the current week */
-        for ($x = 0; $x < $running_day; $x++) {
+        for ($x = 1; $x < $running_day; $x++) {
             $datetime = new DateTime($year . '-' . $month . '-01');
             $datetime->modify('- ' . ($running_day - $x) . ' days');
             $date = new Date();
@@ -195,7 +195,7 @@ class CalendarField extends FormField
 
         /* finish the rest of the days in the week */
         if ($days_in_this_week < 8) {
-            for ($x = 1; $x <= (8 - $days_in_this_week); $x++) {
+            for ($x = 1; $x <= (9 - $days_in_this_week); $x++) {
                 $date = new Date();
                 $date->setValue(
                     date('Y-m-d', mktime(0, 0, 0, ($month + 1), $x, $year))
