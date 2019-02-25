@@ -69,7 +69,7 @@ jQuery.noConflict();
         $valid = true;
         $dates.each(function() {
             $curr_time = new Date($(this).attr('data-date')).getTime();
-            if ($curr_time >= $start_date.getTime() && $curr_time <= ($end_date.getTime()-1) && $(this).hasClass('not-available')) {
+            if ($curr_time >= $start_date.getTime() && $curr_time <= ($end_date.getTime()-1) && !$(this).attr('data-selectable')) {
                 $valid = false;
             }
         });
@@ -95,7 +95,7 @@ jQuery.noConflict();
     }
 
     function deselectAllDates($start) {
-        if ($start === undefinmed) {
+        if ($start === undefined) {
             $start = true;
         }
         $table = $('.calendarfield');

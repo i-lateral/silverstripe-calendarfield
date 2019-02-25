@@ -165,7 +165,8 @@ class CalendarField extends FormField
                 [
                     'InMonth' => false,
                     'Number' => $datetime->format('d'),
-                    'Date' => $date
+                    'Date' => $date,
+                    'Selectable' => true
                 ]
             );
             $days->push($day);
@@ -180,7 +181,8 @@ class CalendarField extends FormField
                 [
                     'InMonth' => true,
                     'Number' => $list_day,
-                    'Date' => $date
+                    'Date' => $date,
+                    'Selectable' => true
                 ]
             );
 
@@ -203,7 +205,8 @@ class CalendarField extends FormField
                 $day = ArrayData::create([
                     'InMonth' => false,
                     'Number' => $x,
-                    'Date' => $date
+                    'Date' => $date,
+                    'Selectable' => true
                 ]);
                 $days->push($day);
             }
@@ -214,9 +217,11 @@ class CalendarField extends FormField
             ) {
                 $day->Availability = 'available';
                 $day->Lock = false; 
+                $day->Selectable = true;
             } else {
                 $day->Availability = 'not-available';
                 $day->Lock = true; 
+                $day->Selectable = false;
             }
         }
 
@@ -242,6 +247,7 @@ class CalendarField extends FormField
 
     /* draws a calendar */
     function calendar() {
+
         $today = new Date();
         $today->setValue(date("Y-m-d H:i:s"));
         

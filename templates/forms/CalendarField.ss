@@ -24,9 +24,9 @@
         <tr class="calendar-row text-center">
             <% loop $Days %>
                 <% if not $InMonth %>
-                    <td data-date="$Date" data-spaces="$Spaces" data-lock="$Lock" class="calendar-day-np $Availability">$Number </td>
+                    <td data-date="$Date" data-spaces="$Spaces" data-selectable="$Selectable" data-lock="$Lock" class="calendar-day-np $Availability">$Number </td>
                 <% else %>
-                    <td data-date="$Date" data-spaces="$Spaces" data-lock="$Lock" class="calendar-day $Availability">
+                    <td data-date="$Date" data-spaces="$Spaces" data-selectable="$Selectable" data-lock="$Lock" class="calendar-day $Availability">
                         <div class="day-number">$Number</div>
                     </td>
                 <% end_if %>
