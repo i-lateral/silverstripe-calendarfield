@@ -21,6 +21,10 @@
   height: 1em;
   border: 1px solid black;
 }
+.calendarfield td.calendar-dar,
+.calendarfield td.calendary-day-np {
+  cursor: pointer;
+}
 .calendarfield .not-available {
   background: rgba(112, 128, 144, 0.25);
 }

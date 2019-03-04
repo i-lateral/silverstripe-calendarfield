@@ -123,7 +123,58 @@ jQuery.noConflict();
         });
     }
 
+    function processClick($object) {
+        $table = $('.calendarfield');
+        $days = $table.attr('data-days');
+        $start_field = $('input[data-calendar=StartDate]');
+        $end_field = $('input[data-calendar=EndDate]');
+        if ($object.hasClass('selected')) {
+            deselectAllDates();
+        } else {
+            if ($start_field.length > 0 && $days > 0 ) {
+                $start_field.val($object.attr('data-date'));
+                if ($end_field.length > 0) {
+                    $next_date = new Date($object.attr('data-date'));
+                    $next_date.setDate($next_date.getDate()+(parseInt($days)-1));
+                    $date_string = $next_date.getFullYear()+'-'+("0" + ($next_date.getMonth() + 1)).slice(-2)+'-'+$next_date.getDate();
+                    $end_field.val($date_string);
+                    selectDates($start_field.val(),$end_field.val()); 
+                } else {
+                    selectDates($start_field.val(),$start_field.val()); 
+                }
+            } else if ($start_field.length > 0 && !$start_field.val()) {
+                $start_field.val($object.attr('data-date'));
+                $object.addClass('selected');
+            } else if ($end_field.length > 0 && !$end_field.val()) {
+                if (new Date($object.attr('data-date')).getTime() > new Date($start_field.val()).getTime()) {
+                    $end_field.val($object.attr('data-date'));
+                } else {
+                    $end_field.val($start_field.val());
+                    $start_field.val($object.attr('data-date'));
+                }
+                selectDates($start_field.val(),$end_field.val());            
+            } else {
+                if (new Date($object.attr('data-date')).getTime() < new Date($start_field.val()).getTime()) {
+                    $start_field.val($object.attr('data-date'));
+                } else if (new Date($object.attr('data-date')).getTime() > new Date($end_field.val()).getTime()) {
+                    $end_field.val($object.attr('data-date'));
+                } else {
+                    $start_field.val('');
+                    $end_field.val('');
+                }
+                if ($start_field.val() && $end_field.val()) {
+                    selectDates($start_field.val(),$end_field.val()); 
+                } else {
+                    deselectAllDates();
+                }           
+            }
+        }
+    }
+
 	$(document).ready(function() {
+        var $ua = navigator.userAgent;
+        var $event = ($ua.match(/(iPod|iPhone|iPad)/i)) ? "touchstart" : "click";
+
         $(document).on('change','.calendarfield select',function() {
             calendarAjax();
         });
@@ -171,53 +222,8 @@ jQuery.noConflict();
             });
         });
 
-        $(document).on('touchstart click','.calendarfield .available, .calendarfield .selected',function() {
-            console.log('clicky');
-            $table = $('.calendarfield');
-            $days = $table.attr('data-days');
-            $start_field = $('input[data-calendar=StartDate]');
-            $end_field = $('input[data-calendar=EndDate]');
-            if ($(this).hasClass('selected')) {
-                deselectAllDates();
-            } else {
-                if ($start_field.length > 0 && $days > 0 ) {
-                    $start_field.val($(this).attr('data-date'));
-                    if ($end_field.length > 0) {
-                        $next_date = new Date($(this).attr('data-date'));
-                        $next_date.setDate($next_date.getDate()+(parseInt($days)-1));
-                        $date_string = $next_date.getFullYear()+'-'+("0" + ($next_date.getMonth() + 1)).slice(-2)+'-'+$next_date.getDate();
-                        $end_field.val($date_string);
-                        selectDates($start_field.val(),$end_field.val()); 
-                    } else {
-                        selectDates($start_field.val(),$start_field.val()); 
-                    }
-                } else if ($start_field.length > 0 && !$start_field.val()) {
-                    $start_field.val($(this).attr('data-date'));
-                    $(this).addClass('selected');
-                } else if ($end_field.length > 0 && !$end_field.val()) {
-                    if (new Date($(this).attr('data-date')).getTime() > new Date($start_field.val()).getTime()) {
-                        $end_field.val($(this).attr('data-date'));
-                    } else {
-                        $end_field.val($start_field.val());
-                        $start_field.val($(this).attr('data-date'));
-                    }
-                    selectDates($start_field.val(),$end_field.val());            
-                } else {
-                    if (new Date($(this).attr('data-date')).getTime() < new Date($start_field.val()).getTime()) {
-                        $start_field.val($(this).attr('data-date'));
-                    } else if (new Date($(this).attr('data-date')).getTime() > new Date($end_field.val()).getTime()) {
-                        $end_field.val($(this).attr('data-date'));
-                    } else {
-                        $start_field.val('');
-                        $end_field.val('');
-                    }
-                    if ($start_field.val() && $end_field.val()) {
-                        selectDates($start_field.val(),$end_field.val()); 
-                    } else {
-                        deselectAllDates();
-                    }           
-                }
-            }
+        $(document).on($event,'.calendarfield .available, .calendarfield .selected',function() {
+            processClick($(this));
         });
     });
 }(jQuery));
