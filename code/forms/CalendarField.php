@@ -149,6 +149,9 @@ class CalendarField extends FormField
 
         /* days and weeks vars now ... */
         $running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
+        if ($running_day < 1) {
+            $running_day = 7;
+        }
         $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
         $days_last_month = date('t', mktime(0, 0, 0, ($month - 1), 1, $year));
         $days_in_this_week = 1;
@@ -172,6 +175,9 @@ class CalendarField extends FormField
             $days->push($day);
             $days_in_this_week++;
         }
+        if ($running_day == 7) {
+            $running_day = 0;
+        }
 
         /* keep going with days.... */
         for ($list_day = 1; $list_day <= $days_in_month; $list_day++) {
@@ -187,13 +193,16 @@ class CalendarField extends FormField
             );
 
             $days->push($day);
-                
+
             if ($running_day == 6) {
                 $running_day = -1;
                 $days_in_this_week = 0;
             }
             $days_in_this_week++; $running_day++; $day_counter++;
         }
+        var_dump($running_day);
+        var_dump($days_in_this_week);
+        var_dump($day_counter);
 
         /* finish the rest of the days in the week */
         if ($days_in_this_week < 8) {
