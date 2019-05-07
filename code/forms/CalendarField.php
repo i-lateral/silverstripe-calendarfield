@@ -200,9 +200,6 @@ class CalendarField extends FormField
             }
             $days_in_this_week++; $running_day++; $day_counter++;
         }
-        var_dump($running_day);
-        var_dump($days_in_this_week);
-        var_dump($day_counter);
 
         /* finish the rest of the days in the week */
         if ($days_in_this_week < 8) {
