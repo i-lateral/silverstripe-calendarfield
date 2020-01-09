@@ -309,9 +309,9 @@ class CalendarField extends FormField
     public function getDaysOfWeek()
     {
         $days = [];
+        $day_start = date( "d", strtotime( "next Monday" ) );
         for ($d=0; $d<7; $d++) {
-            $day = date($this->options['day_format'], mktime(0,0,0,1, $d, date('Y')));
-            $days[] = $day;
+            $days[] = date($this->options['day_format'], mktime(0,0,0,date( "m" ), $day_start + $d, date('Y')));
         }
         
         return $days;
