@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Zend/Locale/Data.php';
+
 class CalendarField extends FormField
 {
     protected $startValue;
@@ -42,7 +44,8 @@ class CalendarField extends FormField
      * @param string $title The field label.
      * @param int $value The value of the field.
      */
-    public function __construct($name, $title = null, $value = null) {
+    public function __construct($name, $title = null, $value = null)
+    {
         $this->children = FieldList::create();
         
         parent::__construct($name, $title, $value);
@@ -53,13 +56,14 @@ class CalendarField extends FormField
         return $this->options;
     }
 
-    public function setOptions(array $options) {
+    public function setOptions(array $options)
+    {
         $this->options = array_merge($this->options, $options);
 
         return $this;
     }
 
-    public function getDisabledDates() 
+    public function getDisabledDates()
     {
         return $this->disabled_dates;
     }
@@ -71,7 +75,7 @@ class CalendarField extends FormField
         foreach ($dates as $date) {
             if ($date instanceof Date) {
                 $disabled[] = $date->format("Y-m-d");
-            } else if ($date instanceof DateTime) {
+            } elseif ($date instanceof DateTime) {
                 $disabled[] = $date->format('Y-m-d');
             } else {
                 $new_date = new DateTime($date);
@@ -93,7 +97,7 @@ class CalendarField extends FormField
         return date('n');
     }
 
-    public function getYear() 
+    public function getYear()
     {
         $year = $this->getRequest()->param('Year');
         if ($year) {
@@ -102,7 +106,7 @@ class CalendarField extends FormField
         return date('Y');
     }
 
-    public function setChildren(FieldList $fields) 
+    public function setChildren(FieldList $fields)
     {
         $this->children = $fields;
 
@@ -113,7 +117,7 @@ class CalendarField extends FormField
      * Returns the children of this field for use in templating.
      * @return FieldList
      */
-    public function getChildren() 
+    public function getChildren()
     {
         return $this->children;
     }
@@ -126,9 +130,9 @@ class CalendarField extends FormField
      *
      * @return $this
      */
-    public function setValue($value) 
+    public function setValue($value)
     {
-        if(is_array($value)) {
+        if (is_array($value)) {
             $this->value = [
                 $this->options['StartName'] => $value[$this->options['StartName']],
                 $this->options['EndName'] => $value[$this->options['EndName']]
@@ -142,7 +146,7 @@ class CalendarField extends FormField
     }
 
     
-    public function getCalendarDays($month,$year)
+    public function getCalendarDays($month, $year)
     {
         /* days in month */
         $days = ArrayList::create();
@@ -153,13 +157,11 @@ class CalendarField extends FormField
             $running_day = 7;
         }
         $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
-        $days_last_month = date('t', mktime(0, 0, 0, ($month - 1), 1, $year));
         $days_in_this_week = 1;
         $day_counter = 0;
-        $dates_array = array();
 
         /* print "blank" days until the first of the current week */
-        for ($x = 1; $x < $running_day; $x++) {
+        for ($x = 0; $x < $running_day; $x++) {
             $datetime = new DateTime($year . '-' . $month . '-01');
             $datetime->modify('- ' . ($running_day - $x) . ' days');
             $date = new Date();
@@ -198,12 +200,14 @@ class CalendarField extends FormField
                 $running_day = -1;
                 $days_in_this_week = 0;
             }
-            $days_in_this_week++; $running_day++; $day_counter++;
+            $days_in_this_week++;
+            $running_day++;
+            $day_counter++;
         }
 
         /* finish the rest of the days in the week */
         if ($days_in_this_week < 8) {
-            for ($x = 1; $x <= (9 - $days_in_this_week); $x++) {
+            for ($x = 1; $x <= (8 - $days_in_this_week); $x++) {
                 $date = new Date();
                 $date->setValue(
                     date('Y-m-d', mktime(0, 0, 0, ($month + 1), $x, $year))
@@ -222,11 +226,11 @@ class CalendarField extends FormField
             if (!in_array($day->Date->format("Y-m-d"), $this->disabled_dates)
             ) {
                 $day->Availability = 'available';
-                $day->Lock = false; 
+                $day->Lock = false;
                 $day->Selectable = true;
             } else {
                 $day->Availability = 'not-available';
-                $day->Lock = true; 
+                $day->Lock = true;
                 $day->Selectable = false;
             }
         }
@@ -240,11 +244,7 @@ class CalendarField extends FormField
         
         foreach ($this->getDaysOfWeek() as $heading) {
             $headings->push(
-                ArrayData::create(
-                    [
-                        'Day' => $heading
-                    ]
-                )
+                ArrayData::create(['Day' => $heading])
             );
         }
 
@@ -252,7 +252,8 @@ class CalendarField extends FormField
     }
 
     /* draws a calendar */
-    function calendar() {
+    public function calendar()
+    {
 
         $today = new Date();
         $today->setValue(date("Y-m-d H:i:s"));
@@ -309,11 +310,12 @@ class CalendarField extends FormField
     public function getDaysOfWeek()
     {
         $days = [];
-        $day_start = date( "d", strtotime( "next Monday" ) );
-        for ($d=0; $d<7; $d++) {
-            $days[] = date($this->options['day_format'], mktime(0,0,0,date( "m" ), $day_start + $d, date('Y')));
+        $daylist = Zend_Locale_Data::getList(i18n::get_locale(), 'day');
+
+        foreach (array_keys($daylist) as $short) {
+            $days[] = ucfirst($short);
         }
-        
+
         return $days;
     }
 
@@ -344,7 +346,7 @@ class CalendarField extends FormField
             $this->Link('calendar'),
             $date->format('n'),
             $date->format('Y')
-        );       
+        );
     }
 
     public function getMonthField()
@@ -353,7 +355,7 @@ class CalendarField extends FormField
         $months = [];
 
         for ($m=1; $m<=12; $m++) {
-            $month = date($this->options['month_format'], mktime(0,0,0,$m, 1, date('Y')));
+            $month = date($this->options['month_format'], mktime(0, 0, 0, $m, 1, date('Y')));
             $months[$m] = $month;
         }
 
@@ -378,8 +380,8 @@ class CalendarField extends FormField
 
         $years = [];
 
-        foreach ( range( $latest_year, $earliest_year ) as $i ) {
-            $years[$i] = date($this->options['year_format'], mktime(0,0,0,1, 1, $i));
+        foreach (range($latest_year, $earliest_year) as $i) {
+            $years[$i] = date($this->options['year_format'], mktime(0, 0, 0, 1, 1, $i));
         }
 
         return DropdownField::create(
@@ -396,7 +398,8 @@ class CalendarField extends FormField
      *
      * @return array
      */
-    public function getAttributes() {
+    public function getAttributes()
+    {
         $attributes = array(
             'name' => $this->getName(),
             'class' => $this->extraClass(),
@@ -407,7 +410,7 @@ class CalendarField extends FormField
             'data-days' => $this->options['days_count']
         );
 
-        if($this->Required()) {
+        if ($this->Required()) {
             $attributes['required'] = 'required';
             $attributes['aria-required'] = 'true';
         }
@@ -425,7 +428,8 @@ class CalendarField extends FormField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator) {
+    public function validate($validator)
+    {
         if (!$this->options['useEndField']) {
             if (!$this->startValue) {
                 $validator->validationError(
