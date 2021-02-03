@@ -7,6 +7,15 @@ class CalendarField extends FormField
     protected $startValue;
     protected $endValue;
 
+    /**
+     * define the date format
+     *
+     * @config
+     * 
+     * @var string
+     */
+    private static $date_format = 'Y-m-d';
+
     private static $allowed_actions = array(
         'calendar'
     );
@@ -74,12 +83,12 @@ class CalendarField extends FormField
 
         foreach ($dates as $date) {
             if ($date instanceof Date) {
-                $disabled[] = $date->format("Y-m-d");
+                $disabled[] = $date->format($this->config()->date_format);
             } elseif ($date instanceof DateTime) {
-                $disabled[] = $date->format('Y-m-d');
+                $disabled[] = $date->format($this->config()->date_format);
             } else {
                 $new_date = new DateTime($date);
-                $disabled[] = $new_date->format("Y-m-d");
+                $disabled[] = $new_date->format($this->config()->date_format);
             }
         }
 
@@ -165,7 +174,7 @@ class CalendarField extends FormField
             $datetime = new DateTime($year . '-' . $month . '-01');
             $datetime->modify('- ' . ($running_day - $x) . ' days');
             $date = new Date();
-            $date->setValue($datetime->format('Y-m-d'));
+            $date->setValue($datetime->format($this->config()->date_format));
             $day = ArrayData::create(
                 [
                     'InMonth' => false,
@@ -210,7 +219,7 @@ class CalendarField extends FormField
             for ($x = 1; $x <= (8 - $days_in_this_week); $x++) {
                 $date = new Date();
                 $date->setValue(
-                    date('Y-m-d', mktime(0, 0, 0, ($month + 1), $x, $year))
+                    date($this->config()->date_format, mktime(0, 0, 0, ($month + 1), $x, $year))
                 );
                 $day = ArrayData::create([
                     'InMonth' => false,
@@ -223,7 +232,7 @@ class CalendarField extends FormField
         }
 
         foreach ($days as $day) {
-            if (!in_array($day->Date->format("Y-m-d"), $this->disabled_dates)
+            if (!in_array($day->Date->format($this->config()->date_format), $this->disabled_dates)
             ) {
                 $day->Availability = 'available';
                 $day->Lock = false;
